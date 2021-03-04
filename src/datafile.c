@@ -185,11 +185,7 @@ static perf_result_t read_one_line(perf_datafile_t* dfile, perf_buffer_t* lines)
             break;
     }
 
-    length = perf_buffer_availablelength(lines);
-    if (curlen > length - 1)
-        curlen = length - 1;
-    perf_buffer_putmem(lines, (unsigned char*)cur, curlen);
-    perf_buffer_putuint8(lines, 0);
+    perf_datafile_parse_line(lines, cur, curlen);
 
     return (PERF_R_SUCCESS);
 }
@@ -240,9 +236,41 @@ done:
     return (result);
 }
 
-void perf_datafile_parse_line(perf_result_t* result)
+void perf_datafile_parse_line(perf_buffer_t* lines, char* cur, size_t curlen)
 {
+    size_t length;
+    char temp[curlen];
+    char* rnd;
+    char* randStr = "{rand}"
+        
+    length = perf_buffer_availablelength(lines);
 
+    // "DYN: " indicates a dynamic entry for which we intercept and process
+    if (curlen > 5 && 
+      cur[0] == 'D' && cur[1] == 'Y' && cur[2] == 'N' && cur[3] == ':' && cur[4] == ' ' ) {
+      strncpy(temp, cur+5, curlen-5);
+      perf_log_printf("got string %s", temp);
+
+      // check rand
+      rnd = strstr(temp, randStr);
+      if (rnd != NULL) {
+          int r = rand() % 1000000;
+          char rStr[strlen(randStr)];
+          sprintf(rStr, "%06u", r);
+          memcpy(rnd, rStr, strlen(rStr));
+          perf_log_printf("got string after rand %s", temp);
+      }
+      int cplen = strlen(temp);
+      if (cplen > length - 1)
+          cplen = length - 1;
+      perf_buffer_putmem(lines, (unsigned char*)temp, cplen);
+      perf_buffer_putuint8(lines, 0);
+    } else {
+        if (curlen > length - 1)
+            curlen = length - 1;
+        perf_buffer_putmem(lines, (unsigned char*)cur, curlen);
+        perf_buffer_putuint8(lines, 0);
+    }
 }
 
 unsigned int perf_datafile_nruns(const perf_datafile_t* dfile)
