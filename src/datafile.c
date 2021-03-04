@@ -236,12 +236,12 @@ done:
     return (result);
 }
 
-void perf_datafile_parse_line(perf_buffer_t* lines, char* cur, size_t curlen)
+void perf_datafile_parse_line(perf_buffer_t* lines, const char* cur, size_t curlen)
 {
     size_t length;
     char temp[curlen];
     char* rnd;
-    char* randStr = "{rand}"
+    char* randStr = "{rand}";
         
     length = perf_buffer_availablelength(lines);
 
