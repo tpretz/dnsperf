@@ -240,6 +240,11 @@ done:
     return (result);
 }
 
+void perf_datafile_parse_line(perf_result_t* result)
+{
+
+}
+
 unsigned int perf_datafile_nruns(const perf_datafile_t* dfile)
 {
     return dfile->nruns;
