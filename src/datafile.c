@@ -254,9 +254,12 @@ void perf_datafile_parse_line(perf_buffer_t* lines, const char* cur, size_t curl
       // check rand
       rnd = strstr(temp, randStr);
       if (rnd != NULL) {
+          perf_log_printf("got string part %s", rnd);
           int r = rand() % 1000000;
+          perf_log_printf("got rand num %d", r);
           char rStr[strlen(randStr)];
           sprintf(rStr, "%06u", r);
+          perf_log_printf("got sprintf %s", rStr);
           memcpy(rnd, rStr, strlen(rStr));
           perf_log_printf("got string after rand %s", temp);
       }
