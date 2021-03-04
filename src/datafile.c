@@ -249,19 +249,19 @@ void perf_datafile_parse_line(perf_buffer_t* lines, const char* cur, size_t curl
     if (curlen > 5 && 
       cur[0] == 'D' && cur[1] == 'Y' && cur[2] == 'N' && cur[3] == ':' && cur[4] == ' ' ) {
       strncpy(temp, cur+5, curlen-5);
-      perf_log_printf("got string %s", temp);
+      //perf_log_printf("got string %s", temp);
 
       // check rand
       rnd = strstr(temp, randStr);
       if (rnd != NULL) {
-          perf_log_printf("got string part %s", rnd);
+          //perf_log_printf("got string part %s", rnd);
           int r = rand() % 1000000;
-          perf_log_printf("got rand num %d", r);
-          char rStr[strlen(randStr)];
+          //perf_log_printf("got rand num %d", r);
+          char rStr[strlen(randStr)+1];
           sprintf(rStr, "%06u", r);
-          perf_log_printf("got sprintf %s", rStr);
+          //perf_log_printf("got sprintf %s", rStr);
           memcpy(rnd, rStr, strlen(rStr));
-          perf_log_printf("got string after rand %s", temp);
+          //perf_log_printf("got string after rand %s", temp);
       }
       int cplen = strlen(temp);
       if (cplen > length - 1)
